@@ -1,3 +1,4 @@
+import React from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { KPICard } from "@/components/KPICard";
@@ -6,6 +7,12 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Users, Shield, Settings, Database, Activity } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import { useAuth } from "@/context/AuthContext";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -26,6 +33,50 @@ const AdminDashboard = () => {
     { month: "May", score: 88 },
     { month: "Jun", score: 91 },
   ];
+
+  const [isAddUserOpen, setIsAddUserOpen] = React.useState(false);
+  const [userData, setUserData] = React.useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "employee",
+    department: "",
+    position: ""
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleRoleChange = (value: string) => {
+    setUserData(prev => ({ ...prev, role: value }));
+  };
+
+  const handleAddUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5001/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.ok) {
+        alert("User added successfully!");
+        setIsAddUserOpen(false);
+        setUserData({ name: "", email: "", password: "", role: "employee", department: "", position: "" });
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.error || error.message || "Failed to add user"}`);
+      }
+    } catch (error) {
+      console.error("Error adding user:", error);
+      alert("Failed to connect to server");
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -99,9 +150,51 @@ const AdminDashboard = () => {
                 <Users className="mx-auto mb-3 text-primary" size={32} />
                 <h3 className="font-semibold mb-1">User Management</h3>
                 <p className="text-sm text-muted-foreground mb-3">Manage users & roles</p>
-                <Button size="sm" variant="outline" className="w-full">
-                  Manage
-                </Button>
+                <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline" className="w-full">
+                      Add User
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add New User</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleAddUser} className="space-y-4">
+                      <div>
+                        <Label htmlFor="name">Name</Label>
+                        <Input id="name" name="name" value={userData.name} onChange={handleInputChange} required />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input id="email" name="email" type="email" value={userData.email} onChange={handleInputChange} required />
+                      </div>
+                      <div>
+                        <Label htmlFor="password">Password</Label>
+                        <Input id="password" name="password" type="password" value={userData.password} onChange={handleInputChange} required />
+                      </div>
+                      <div>
+                        <Label htmlFor="role">Role</Label>
+                        <Select onValueChange={handleRoleChange} defaultValue={userData.role}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="admin">Admin</SelectItem>
+                            <SelectItem value="supervisor">Supervisor</SelectItem>
+                            <SelectItem value="employee">Employee</SelectItem>
+                            <SelectItem value="ippms_admin">IPPMS Admin</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="department">Department</Label>
+                        <Input id="department" name="department" value={userData.department} onChange={handleInputChange} />
+                      </div>
+                      <Button type="submit" className="w-full">Create User</Button>
+                    </form>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
 
