@@ -4,8 +4,13 @@ import { KPICard } from "@/components/KPICard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Clock, AlertCircle, FileText, Upload } from "lucide-react";
+import { ReportUploadModal } from "@/components/ReportUploadModal";
+import { ReportList } from "@/components/ReportList";
+
+import { useAuth } from "@/context/AuthContext";
 
 const EmployeeDashboard = () => {
+  const { user, logout } = useAuth();
   const tasks = [
     { id: 1, title: "Complete survey data entry for Project BB-2024-01", status: "pending", priority: "high" },
     { id: 2, title: "Review DPR draft for Upper Assam flood control", status: "in-progress", priority: "medium" },
@@ -21,14 +26,14 @@ const EmployeeDashboard = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header onLoginClick={() => {}} />
-      
+      <Header currentUser={user} onLogout={logout} onLoginClick={() => { }} />
+
       <main className="flex-1 bg-muted/30">
         <div className="container mx-auto px-4 py-8">
           {/* Page Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">Employee Dashboard</h1>
-            <p className="text-muted-foreground">Welcome back, Rajesh Kumar (Junior Engineer)</p>
+            <p className="text-muted-foreground">Welcome back, {user?.name || "Employee"} ({user?.position || "Junior Engineer"})</p>
           </div>
 
           {/* KPI Cards */}
@@ -57,11 +62,10 @@ const EmployeeDashboard = () => {
                       <div className="flex-1">
                         <p className="font-medium">{task.title}</p>
                         <div className="flex gap-2 mt-1">
-                          <span className={`text-xs px-2 py-0.5 rounded ${
-                            task.priority === "high" ? "bg-destructive/10 text-destructive" :
+                          <span className={`text-xs px-2 py-0.5 rounded ${task.priority === "high" ? "bg-destructive/10 text-destructive" :
                             task.priority === "medium" ? "bg-warning/10 text-warning" :
-                            "bg-success/10 text-success"
-                          }`}>
+                              "bg-success/10 text-success"
+                            }`}>
                             {task.priority}
                           </span>
                           <span className="text-xs text-muted-foreground capitalize">{task.status}</span>
@@ -86,16 +90,22 @@ const EmployeeDashboard = () => {
                   <FileText size={18} />
                   Create Request
                 </Button>
-                <Button variant="outline" className="w-full justify-start" size="lg">
-                  <Upload size={18} />
-                  Upload Report
-                </Button>
+                <ReportUploadModal onSuccess={() => window.location.reload()}>
+                  <Button variant="outline" className="w-full justify-start" size="lg">
+                    <Upload size={18} className="mr-2" />
+                    Upload Report
+                  </Button>
+                </ReportUploadModal>
                 <Button variant="outline" className="w-full justify-start" size="lg">
                   <CheckCircle2 size={18} />
                   Self Assessment
                 </Button>
               </CardContent>
             </Card>
+          </div>
+
+          <div className="mt-6">
+            <ReportList userId={user?.id} />
           </div>
 
           {/* Notifications */}
