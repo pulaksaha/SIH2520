@@ -3,10 +3,12 @@ import { Footer } from "@/components/Footer";
 import { KPICard } from "@/components/KPICard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { Users, Shield, Settings, Database, Activity } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const projectData = [
     { month: "Jan", completed: 4, ongoing: 12 },
     { month: "Feb", completed: 6, ongoing: 11 },
@@ -27,8 +29,8 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header onLoginClick={() => {}} />
-      
+      <Header onLoginClick={() => { }} />
+
       <main className="flex-1 bg-muted/30">
         <div className="container mx-auto px-4 py-8">
           {/* Page Header */}
@@ -77,10 +79,10 @@ const AdminDashboard = () => {
                     <XAxis dataKey="month" />
                     <YAxis />
                     <Tooltip />
-                    <Line 
-                      type="monotone" 
-                      dataKey="score" 
-                      stroke="hsl(var(--primary))" 
+                    <Line
+                      type="monotone"
+                      dataKey="score"
+                      stroke="hsl(var(--primary))"
                       strokeWidth={2}
                       name="KPI Score"
                     />
@@ -92,7 +94,7 @@ const AdminDashboard = () => {
 
           {/* Admin Actions Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/dashboard/admin/users')}>
               <CardContent className="p-6 text-center">
                 <Users className="mx-auto mb-3 text-primary" size={32} />
                 <h3 className="font-semibold mb-1">User Management</h3>
@@ -103,7 +105,7 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/dashboard/admin/roles')}>
               <CardContent className="p-6 text-center">
                 <Shield className="mx-auto mb-3 text-primary" size={32} />
                 <h3 className="font-semibold mb-1">Role & Permissions</h3>
@@ -114,7 +116,7 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/kpi-dashboard')}>
               <CardContent className="p-6 text-center">
                 <Activity className="mx-auto mb-3 text-primary" size={32} />
                 <h3 className="font-semibold mb-1">KPI Templates</h3>
@@ -125,7 +127,7 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/dashboard/admin/logs')}>
               <CardContent className="p-6 text-center">
                 <Database className="mx-auto mb-3 text-primary" size={32} />
                 <h3 className="font-semibold mb-1">System Logs</h3>

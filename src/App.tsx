@@ -16,6 +16,9 @@ import { TicketManagement } from "./components/TicketManagement";
 import { ProjectCollaboration } from "./components/ProjectCollaboration";
 import { Dashboard } from "./components/Dashboard";
 import iPPMSDashboard from "./pages/iPPMSDashboard";
+import UserManagement from "./pages/UserManagement";
+import RoleManagement from "./pages/RoleManagement";
+import SystemLogs from "./pages/SystemLogs";
 import { useAuth } from "./context/AuthContext";
 import { useAccessControl } from "./context/AccessControlContext";
 import { AppProviders } from "./providers";
@@ -26,15 +29,15 @@ const queryClient = new QueryClient();
 const ProtectedRoute = ({ children, requiredPermission }: { children: React.ReactNode, requiredPermission?: string }) => {
   const { user } = useAuth();
   const { hasPermission } = useAccessControl();
-  
+
   if (!user) {
     return <Navigate to="/" />;
   }
-  
+
   if (requiredPermission && !hasPermission(requiredPermission)) {
     return <div className="p-8 text-center">You don't have permission to access this page.</div>;
   }
-  
+
   return <>{children}</>;
 };
 
@@ -45,64 +48,79 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/dashboard/employee" element={<EmployeeDashboard />} />
-          <Route path="/dashboard/supervisor" element={<SupervisorDashboard />} />
-          <Route path="/dashboard/admin" element={<AdminDashboard />} />
-          
-          {/* Performance Management Routes */}
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/kpi-dashboard" element={
-            <ProtectedRoute requiredPermission="view_kpi">
-              <KPIDashboard />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/expense-management" element={
-            <ProtectedRoute requiredPermission="manage_expenses">
-              <ExpenseManagement />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/project-collaboration" element={
-            <ProtectedRoute requiredPermission="view_projects">
-              <ProjectCollaboration />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/rti-portal" element={
-            <ProtectedRoute>
-              <RTIPortal />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/ticket-management" element={
-            <ProtectedRoute>
-              <TicketManagement />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/ippms" element={
-            <ProtectedRoute>
-              <iPPMSDashboard />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/utilities" element={
-            <UtilitiesPage />
-          } />
-          
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </AppProviders>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/dashboard/employee" element={<EmployeeDashboard />} />
+            <Route path="/dashboard/supervisor" element={<SupervisorDashboard />} />
+            <Route path="/dashboard/admin" element={<AdminDashboard />} />
+            <Route path="/dashboard/admin/users" element={
+              <ProtectedRoute requiredPermission="manage_users">
+                <UserManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/admin/roles" element={
+              <ProtectedRoute requiredPermission="manage_roles">
+                <RoleManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/admin/logs" element={
+              <ProtectedRoute requiredPermission="view_logs">
+                <SystemLogs />
+              </ProtectedRoute>
+            } />
+
+            {/* Performance Management Routes */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/kpi-dashboard" element={
+              <ProtectedRoute requiredPermission="view_kpi">
+                <KPIDashboard />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/expense-management" element={
+              <ProtectedRoute requiredPermission="manage_expenses">
+                <ExpenseManagement />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/project-collaboration" element={
+              <ProtectedRoute requiredPermission="view_projects">
+                <ProjectCollaboration />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/rti-portal" element={
+              <ProtectedRoute>
+                <RTIPortal />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/ticket-management" element={
+              <ProtectedRoute>
+                <TicketManagement />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/ippms" element={
+              <ProtectedRoute>
+                <iPPMSDashboard />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/utilities" element={
+              <UtilitiesPage />
+            } />
+
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AppProviders>
   </div>
 );
 
