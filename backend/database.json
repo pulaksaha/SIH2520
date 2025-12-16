@@ -4,7 +4,7 @@
       "_id": "1",
       "name": "Admin User",
       "email": "admin@brahmaputraboard.gov.in",
-      "password": "$2b$10$HegXgl49052f6tK4a7VuR.T3vaWB9iqBdCEf00rbyMDAc.tVUfe26",
+      "password": "$2b$10$6bWn4yfJi3v8hJvRfgfNq.07q0JeWhe3wiJFAgTVF8JY0owiiZAo.",
       "role": "admin",
       "department": "Administration",
       "position": "System Administrator",
