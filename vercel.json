@@ -1,18 +1,8 @@
 {
-  "name": "brahmaputra-board-portal",
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "dist/**",
-      "use": "@vercel/static"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
-  "framework": "vite",
-  "outputDirectory": "dist"
+  ]
 }
