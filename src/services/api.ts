@@ -1,6 +1,6 @@
 // Real API service for the Digital Performance and Productivity Management System
 
-const API_URL = 'http://localhost:5001/api';
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 // Types
 export interface User {
@@ -67,6 +67,29 @@ export interface Ticket {
   category: 'technical' | 'administrative' | 'rti' | 'other';
 }
 
+export interface Report {
+  _id: string;
+  title: string;
+  description: string;
+  filePath: string;
+  fileName: string;
+  fileType: string;
+  uploadedBy: User | string;
+  department: string;
+  createdAt: string;
+}
+
+export interface Request {
+  _id: string;
+  title: string;
+  description: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdBy: User | string;
+  department: string;
+  reason?: string;
+  createdAt: string;
+}
+
 // Helper to handle fetch errors
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
@@ -95,6 +118,15 @@ export const api = {
       console.error('Login failed:', error);
       return null;
     }
+  },
+
+  register: async (userData: any): Promise<void> => {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
+    return handleResponse(response);
   },
 
   // Users
@@ -194,5 +226,54 @@ export const api = {
     } catch {
       return null;
     }
+  },
+
+  // Reports
+  uploadReport: async (formData: FormData): Promise<Report> => {
+    console.log(`Uploading to: ${API_URL}/reports/upload`);
+    const response = await fetch(`${API_URL}/reports/upload`, {
+      method: 'POST',
+      body: formData, // Content-Type header excluded for FormData
+    });
+    return handleResponse(response);
+  },
+
+  getAllReports: async (): Promise<Report[]> => {
+    const response = await fetch(`${API_URL}/reports`);
+    return handleResponse(response);
+  },
+
+  getMyReports: async (userId: string): Promise<Report[]> => {
+    const response = await fetch(`${API_URL}/reports/user/${userId}`);
+    return handleResponse(response);
+  },
+
+  // Requests
+  createRequest: async (data: Partial<Request>): Promise<Request> => {
+    const response = await fetch(`${API_URL}/requests`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return handleResponse(response);
+  },
+
+  getAllRequests: async (): Promise<Request[]> => {
+    const response = await fetch(`${API_URL}/requests`);
+    return handleResponse(response);
+  },
+
+  getMyRequests: async (userId: string): Promise<Request[]> => {
+    const response = await fetch(`${API_URL}/requests/user/${userId}`);
+    return handleResponse(response);
+  },
+
+  updateRequestStatus: async (id: string, status: Request['status'], reason?: string): Promise<Request> => {
+    const response = await fetch(`${API_URL}/requests/${id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status, reason }),
+    });
+    return handleResponse(response);
   }
 };

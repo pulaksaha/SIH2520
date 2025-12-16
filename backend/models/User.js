@@ -16,20 +16,13 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'supervisor', 'employee', 'ippms_admin'],
         default: 'employee'
     },
-    permissions: {
-        type: [String],
-        default: []
-    },
     department: {
-        type: String,
-        default: ''
+        type: String
     },
     position: {
-        type: String,
-        default: ''
+        type: String
     }
 }, {
     timestamps: true

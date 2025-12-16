@@ -1,5 +1,6 @@
 import React from "react";
 import { Header } from "@/components/Header";
+import { api } from "@/services/api";
 import { Footer } from "@/components/Footer";
 import { KPICard } from "@/components/KPICard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,11 +12,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
+
+import { ReportList } from "@/components/ReportList";
+import { RequestManagementList } from "@/components/RequestManagementList";
 
 import { useAuth } from "@/context/AuthContext";
 
 const AdminDashboard = () => {
+  const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
   const projectData = [
     { month: "Jan", completed: 4, ongoing: 12 },
     { month: "Feb", completed: 6, ongoing: 11 },
@@ -56,31 +67,23 @@ const AdminDashboard = () => {
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5001/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        alert("User added successfully!");
-        setIsAddUserOpen(false);
-        setUserData({ name: "", email: "", password: "", role: "employee", department: "", position: "" });
-      } else {
-        const error = await response.json();
-        alert(`Error: ${error.error || error.message || "Failed to add user"}`);
-      }
-    } catch (error) {
+      await api.register(userData);
+      alert("User added successfully!");
+      setIsAddUserOpen(false);
+      setUserData({ name: "", email: "", password: "", role: "employee", department: "", position: "" });
+    } catch (error: any) {
       console.error("Error adding user:", error);
-      alert("Failed to connect to server");
+      alert(`Error: ${error.message || "Failed to add user"}`);
     }
   };
 
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Header onLoginClick={() => { }} />
+      <Header currentUser={user} onLogout={handleLogout} onLoginClick={() => { }} />
 
       <main className="flex-1 bg-muted/30">
         <div className="container mx-auto px-4 py-8">
@@ -263,13 +266,19 @@ const AdminDashboard = () => {
                   </div>
                 ))}
               </div>
+
             </CardContent>
           </Card>
+
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ReportList isAdmin />
+            <RequestManagementList isAdmin />
+          </div>
         </div>
-      </main>
+      </main >
 
       <Footer />
-    </div>
+    </div >
   );
 };
 
