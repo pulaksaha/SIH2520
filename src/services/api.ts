@@ -1,6 +1,6 @@
 // Real API service for the Digital Performance and Productivity Management System
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+export const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5001/api');
 
 // Types
 export interface User {
