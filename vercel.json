@@ -1,8 +1,17 @@
 {
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "/backend/server.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "backend/server.js": {
+      "includeFiles": "backend/database.json"
+    }
+  }
 }
