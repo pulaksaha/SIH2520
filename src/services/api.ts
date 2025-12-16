@@ -90,6 +90,15 @@ export interface Request {
   createdAt: string;
 }
 
+export interface Role {
+  _id: string;
+  name: string;
+  displayName: string;
+  description: string;
+  permissions: string[];
+  isSystemRole: boolean;
+}
+
 // Helper to handle fetch errors
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
@@ -273,6 +282,38 @@ export const api = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status, reason }),
+    });
+    return handleResponse(response);
+  },
+
+  // Roles
+  getRoles: async (): Promise<Role[]> => {
+    const response = await fetch(`${API_URL}/roles`);
+    return handleResponse(response);
+  },
+
+  getRoleByName: async (name: string): Promise<Role | null> => {
+    try {
+      const response = await fetch(`${API_URL}/roles/${name}`);
+      return await handleResponse(response);
+    } catch {
+      return null;
+    }
+  },
+
+  updateRolePermissions: async (id: string, permissions: string[]): Promise<Role> => {
+    const response = await fetch(`${API_URL}/roles/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ permissions }),
+    });
+    return handleResponse(response);
+  },
+
+  initRoles: async (): Promise<{ message: string; roles: Role[] }> => {
+    const response = await fetch(`${API_URL}/roles/init`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
     });
     return handleResponse(response);
   }

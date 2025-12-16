@@ -24,6 +24,7 @@ app.use('/api/expenses', require('./routes/expenses'));
 app.use('/api/tickets', require('./routes/tickets'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/requests', require('./routes/requests'));
+app.use('/api/roles', require('./routes/roles'));
 // Serve uploads from absolute path
 app.use('/uploads', express.static(require('path').join(__dirname, 'uploads')));
 
