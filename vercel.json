@@ -10,8 +10,6 @@
     }
   ],
   "functions": {
-    "api/index.js": {
-      "includeFiles": "backend/database.json"
-    }
+    "api/index.js": {}
   }
 }
