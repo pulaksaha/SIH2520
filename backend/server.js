@@ -37,7 +37,7 @@ app.use((err, req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-  res.send('API is running (File-based DB)...');
+  res.send('API is running...');
 });
 
 app.listen(PORT, () => {

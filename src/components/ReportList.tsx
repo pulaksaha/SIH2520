@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, Download, User } from 'lucide-react';
-import { api, Report } from '@/services/api';
+import { api, Report, API_URL } from '@/services/api';
 
 interface ReportListProps {
     isAdmin?: boolean;
@@ -38,7 +38,7 @@ export const ReportList: React.FC<ReportListProps> = ({ isAdmin, userId }) => {
         // filePath comes as 'uploads\\filename' or 'uploads/filename' from server
         // We need to construct absolute URL to server. Assuming server runs on 5001.
         const filename = filePath.split(/[/\\]/).pop();
-        const url = `http://localhost:5001/uploads/${filename}`;
+        const url = `${API_URL.replace('/api', '')}/uploads/${filename}`;
         window.open(url, '_blank');
     };
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { Header } from "@/components/Header";
+import { api } from "@/services/api";
 import { Footer } from "@/components/Footer";
 import { KPICard } from "@/components/KPICard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -66,25 +67,13 @@ const AdminDashboard = () => {
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5001/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        alert("User added successfully!");
-        setIsAddUserOpen(false);
-        setUserData({ name: "", email: "", password: "", role: "employee", department: "", position: "" });
-      } else {
-        const error = await response.json();
-        alert(`Error: ${error.error || error.message || "Failed to add user"}`);
-      }
-    } catch (error) {
+      await api.register(userData);
+      alert("User added successfully!");
+      setIsAddUserOpen(false);
+      setUserData({ name: "", email: "", password: "", role: "employee", department: "", position: "" });
+    } catch (error: any) {
       console.error("Error adding user:", error);
-      alert("Failed to connect to server");
+      alert(`Error: ${error.message || "Failed to add user"}`);
     }
   };
 

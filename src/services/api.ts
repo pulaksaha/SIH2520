@@ -1,6 +1,6 @@
 // Real API service for the Digital Performance and Productivity Management System
 
-const API_URL = 'http://localhost:5001/api';
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 // Types
 export interface User {
@@ -118,6 +118,15 @@ export const api = {
       console.error('Login failed:', error);
       return null;
     }
+  },
+
+  register: async (userData: any): Promise<void> => {
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
+    return handleResponse(response);
   },
 
   // Users
