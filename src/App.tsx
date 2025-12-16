@@ -8,14 +8,20 @@ import EmployeeDashboard from "./pages/EmployeeDashboard";
 import SupervisorDashboard from "./pages/SupervisorDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
-import UtilitiesPage from "./pages/UtilitiesPage";
+import UtilitiesActivities from "./pages/UtilitiesActivities";
+import ExpenseManagementPage from "./pages/ExpenseManagement";
+import ArchiveManagement from "./pages/ArchiveManagement";
+import CollaborationHub from "./pages/CollaborationHub";
+import AIPredictor from "./pages/AIPredictor";
+import QueryManagement from "./pages/QueryManagement";
+import APAARManagement from "./pages/APAARManagement";
 import { KPIDashboard } from "./components/KPIDashboard";
 import { ExpenseManagement } from "./components/ExpenseManagement";
 import { RTIPortal } from "./components/RTIPortal";
 import { TicketManagement } from "./components/TicketManagement";
 import { ProjectCollaboration } from "./components/ProjectCollaboration";
 import { Dashboard } from "./components/Dashboard";
-import iPPMSDashboard from "./pages/iPPMSDashboard";
+import { iPPMSDashboard } from "./pages/iPPMSDashboard";
 import UserManagement from "./pages/UserManagement";
 import RoleManagement from "./pages/RoleManagement";
 import SystemLogs from "./pages/SystemLogs";
@@ -111,9 +117,14 @@ const App = () => (
               </ProtectedRoute>
             } />
 
-            <Route path="/utilities" element={
-              <UtilitiesPage />
-            } />
+            {/* New Utilities Routes */}
+            <Route path="/utilities-activities" element={<UtilitiesActivities />} />
+            <Route path="/utilities/expense-management" element={<ExpenseManagementPage />} />
+            <Route path="/utilities/archive" element={<ArchiveManagement />} />
+            <Route path="/utilities/collaboration" element={<CollaborationHub />} />
+            <Route path="/utilities/ai-predictor" element={<AIPredictor />} />
+            <Route path="/utilities/query-management" element={<QueryManagement />} />
+            <Route path="/activities/apaar" element={<APAARManagement />} />
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

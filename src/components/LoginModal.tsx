@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 interface LoginModalProps {
   open: boolean;
@@ -26,15 +26,21 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
   const [selectedRole, setSelectedRole] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleLogin = async () => {
     try {
       setError(null);
+      setIsLoading(true);
+
+      // Call the backend login API
       await login(email, password);
+
       onOpenChange(false);
 
+      // Map role to dashboard route
       const roleRouteMap: Record<string, string> = {
         admin: "admin",
         supervisor: "supervisor",
@@ -50,9 +56,17 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
         navigate(`/dashboard/${route}`);
       }
 
+      // Reset
+      setTimeout(() => {
+        setEmail("");
+        setPassword("");
+        setSelectedRole("");
+      }, 300);
     } catch (err) {
       setError("Login failed. Please check your credentials.");
       console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,7 +79,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Login to iPPMS Portal</DialogTitle>
+          <DialogTitle className="text-2xl">Login to CGWB Portal</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 mt-4">
@@ -129,9 +143,16 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
             variant="gov-primary"
             onClick={handleLogin}
             className="w-full"
-            disabled={!selectedRole || !email || !password}
+            disabled={!selectedRole || !email || !password || isLoading}
           >
-            Login
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
           </Button>
 
           <div className="text-center">
@@ -149,7 +170,7 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
             </div>
           </div>
 
-          <Button variant="gov-accent" className="w-full" onClick={handleSSOLogin}>
+          <Button variant="gov-accent" className="w-full" onClick={handleSSOLogin} disabled={isLoading}>
             Login with SSO
           </Button>
         </div>

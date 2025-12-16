@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Globe, User, ChevronDown, LogOut } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -17,24 +16,10 @@ interface HeaderProps {
 }
 
 export const Header = ({ onLoginClick, currentUser, onLogout }: HeaderProps) => {
-  console.log('Header rendered with currentUser:', currentUser);
-  const [fontSize, setFontSize] = useState<"small" | "normal" | "large" | "xlarge">("normal");
-  const [language, setLanguage] = useState<"en" | "hi">("en");
-
-  const adjustFontSize = (size: "small" | "normal" | "large" | "xlarge") => {
-    setFontSize(size);
-    document.body.className = document.body.className.replace(/font-size-\w+/, "");
-    document.body.classList.add(`font-size-${size}`);
-  };
-
-  const toggleLanguage = () => {
-    setLanguage(language === "en" ? "hi" : "en");
-  };
-
   const menuItems = [
     { title: "Home", href: "/" },
     {
-      title: "About Brahmaputra Board",
+      title: "About CGWB",
       items: ["Office Location", "Who's Who", "Organogram", "Contact Us", "Roll of Honour"],
     },
     {
@@ -43,59 +28,27 @@ export const Header = ({ onLoginClick, currentUser, onLogout }: HeaderProps) => 
     },
     {
       title: "Publications",
-      items: ["Project Reports", "Technical Publications & Media Warehouse", "Project News"],
+      items: ["Bhujal Samvad", "CGWB Publications & Media Warehouse", "Bhujal News"],
     },
-    { title: "Projects", href: "#" },
+    { title: "CGWS", href: "#" },
     { title: "Tender", href: "#" },
     { title: "Vacancies", href: "#" },
     { title: "Social Media", href: "#" },
     {
       title: "Citizen Corner",
-      items: ["Project Portal", "Public Notice", "RTI Act", "Citizen Charter"],
+      items: ["CGWBcPort", "Public Notice", "RTI Act", "Citizen Charter"],
     },
     { title: "Vedic Gallery", href: "#" },
   ];
 
   return (
-    <header className="bg-background border-b border-border sticky top-0 z-50">
-      {/* Top Bar */}
-      <div className="bg-primary text-primary-foreground py-1 px-4">
-        <div className="container mx-auto flex justify-between items-center text-xs">
-          <div className="flex gap-1">
-            <button
-              onClick={() => adjustFontSize("small")}
-              className="px-2 py-0.5 hover:bg-primary-hover rounded"
-            >
-              A-
-            </button>
-            <button
-              onClick={() => adjustFontSize("normal")}
-              className="px-2 py-0.5 hover:bg-primary-hover rounded"
-            >
-              A
-            </button>
-            <button
-              onClick={() => adjustFontSize("large")}
-              className="px-2 py-0.5 hover:bg-primary-hover rounded"
-            >
-              A+
-            </button>
-            <button
-              onClick={() => adjustFontSize("xlarge")}
-              className="px-2 py-0.5 hover:bg-primary-hover rounded font-bold"
-            >
-              A+
-            </button>
-          </div>
-          <div className="flex items-center gap-3">
-            <button onClick={toggleLanguage} className="flex items-center gap-1 hover:underline">
-              <Globe size={14} />
-              <span>{language === "en" ? "हिंदी" : "English"}</span>
-            </button>
-            <button className="px-3 py-1 bg-accent hover:bg-accent-hover rounded text-xs font-medium">
-              SSO
-            </button>
-          </div>
+    <header className="bg-background border-b border-border sticky top-0 z-50 backdrop-blur-md bg-background/95">
+      {/* Top Bar - Simplified */}
+      <div className="bg-gradient-to-r from-primary via-primary to-accent text-primary-foreground py-2 px-4">
+        <div className="container mx-auto flex justify-end items-center">
+          <button className="px-4 py-1.5 bg-background/20 hover:bg-background/30 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105">
+            SSO Portal
+          </button>
         </div>
       </div>
 
@@ -109,8 +62,8 @@ export const Header = ({ onLoginClick, currentUser, onLogout }: HeaderProps) => 
               className="gov-emblem"
             />
             <div>
-              <h1 className="text-2xl font-bold text-primary">Brahmaputra Board Portal</h1>
-              <p className="text-sm text-muted-foreground">Digital Governance and Productivity Platform</p>
+              <h1 className="text-2xl font-bold text-primary">CGWB Portal</h1>
+              <p className="text-sm text-muted-foreground">Central Ground Water Board</p>
             </div>
           </div>
           {currentUser ? (
